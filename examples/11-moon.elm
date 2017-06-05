@@ -189,23 +189,17 @@ getMoonPhase timestamp =
     Http.send GetPhase request
 
 -- generate image name based on current phase and illumination
---generateImageName : String -> Float -> String
---generateImageName phase illumination = 
---  if ( (phase == "waxing" || phase == "waning") && (illumination < 1) ) then "moon-phases/new-moon.svg"
---  else if ( (phase == "waxing") && (illumination >= 1 && illumination < 40) ) then "moon-phases/waxing-cresent.svg"
---  else if ( (phase == "waxing") && (illumination >= 40 && illumination < 60) ) then "moon-phases/first-quarter.svg"
---  else if ( (phase == "waxing") && (illumination >= 60 && illumination < 90) ) then "moon-phases/waxing-gibbous.svg"
---  else if ( (phase == "waxing" || phase == "waning") && illumination >= 99) then "moon-phases/full-moon.svg"
---  else if ( (phase == "waning") && ( illumination < 99 && illumination >= 60) ) then "moon-phases/waning-gibbous.svg"
---  else if ( (phase == "waning") && ( illumination < 60 && illumination >= 40) ) then "moon-phases/last-quarter.svg"
---  else if ( (phase == "waning") && ( illumination < 40 && illumination >= 1) ) then "moon-phases/waning-cresent.svg"
---  else "couldn't figure out the phase"
-
--- generate image name based on current phase and illumination
 generateImageName : String -> Float -> String
 generateImageName phase illumination = 
-  if ( (phase == "waxing") && (illumination >= 60 && illumination < 90) ) then "moon-phases/waxing-gibbous.svg"
-  else phase
+  if ( (phase == "waxing" || phase == "waning") && (illumination < 1) ) then "moon-phases/new-moon.svg"
+  else if ( (phase == "waxing") && (illumination >= 1 && illumination < 40) ) then "moon-phases/waxing-cresent.svg"
+  else if ( (phase == "waxing") && (illumination >= 40 && illumination < 60) ) then "moon-phases/first-quarter.svg"
+  else if ( (phase == "waxing") && (illumination >= 60 && illumination < 90) ) then "moon-phases/waxing-gibbous.svg"
+  else if ( (phase == "waxing" || phase == "waning") && illumination >= 99) then "moon-phases/full-moon.svg"
+  else if ( (phase == "waning") && ( illumination < 99 && illumination >= 60) ) then "moon-phases/waning-gibbous.svg"
+  else if ( (phase == "waning") && ( illumination < 60 && illumination >= 40) ) then "moon-phases/last-quarter.svg"
+  else if ( (phase == "waning") && ( illumination < 40 && illumination >= 1) ) then "moon-phases/waning-cresent.svg"
+  else "couldn't figure out the phase"
 
 -- request for string
 requestForString : String -> Http.Request String
