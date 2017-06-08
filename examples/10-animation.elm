@@ -3,7 +3,9 @@ import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
-import Animation exposing (px)
+import AnimationFrame exposing (..)
+import Time exposing (Time, second)
+import Task
 import Random
 
 main =
@@ -20,13 +22,14 @@ main =
 
 type alias Model = 
   { 
-    dieFace : Int
+    dieFace : Int,
+    circleRadius : Int
   }
 
 
 init : (Model, Cmd Msg)
 init = 
-  ({dieFace = 1}, Cmd.none)
+  ({dieFace = 1, circleRadius = 0}, Cmd.none)
 
 
 -- SUBSCRIPTIONS
@@ -34,7 +37,7 @@ init =
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
-  Sub.none
+  AnimationFrame.times CanAnimate
 
 
 -- UPDATE
@@ -43,10 +46,11 @@ subscriptions model =
 type Msg
   = Roll
   | NewFace Int
+  | CanAnimate Time
 
 
 update : Msg -> Model -> (Model, Cmd Msg)
-update msg model =
+update msg model = 
   case msg of
     Roll ->
       (model, Random.generate NewFace (Random.int 1 6))
@@ -54,6 +58,9 @@ update msg model =
     NewFace newFace ->
       ({model | dieFace = newFace}, Cmd.none)
 
+    CanAnimate time ->
+      ({model | circleRadius = (model.circleRadius + incrementBy (model.dieFace, model.circleRadius))}, Cmd.none)
+      
 
 -- VIEW
 
@@ -113,26 +120,16 @@ diceSvg model =
 
 animateSvg : Model -> Svg Msg
 animateSvg model = 
-  let circleRadius = 
-    case model.dieFace of 
-      1 -> 
-        20
-      2 ->
-        40
-      3 ->
-        60
-      4 ->
-        70
-      5 ->
-        80
-      6 ->
-        90
-      _ ->
-        0
-  in
-    svg [ Svg.Attributes.width "500", Svg.Attributes.height "500" ]
-      [
-        Svg.circle [ cy "130", cx "130", r (toString circleRadius), Svg.Attributes.fill "#63e0be" ] [] 
-      ]
+  svg [ Svg.Attributes.width "500", Svg.Attributes.height "500" ]
+    [
+      Svg.circle [ cy "130", cx "130", r (toString model.circleRadius), Svg.Attributes.fill "#63e0be" ] [] 
+    ]
 
 
+-- HELPERS
+
+incrementBy : (Int, Int) -> Int
+incrementBy (dieface, radius) = 
+  if ((dieface * 20) < radius) then -1
+  else if ((dieface * 20) > radius) then 1
+  else 0
