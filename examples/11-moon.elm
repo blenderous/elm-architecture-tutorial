@@ -82,7 +82,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model = 
-  div []
+  div [ Html.Attributes.style [("padding-left","30px"), ("padding-top","20px"), ("padding-bottom","20px")] ]
     [ p [] [text ("Phase: " ++ model.phase) ]
     , p [] [text ("Age: " ++ toString model.age) ]
     , p [] [text ("Illumination: " ++ toString model.illumination) ]
